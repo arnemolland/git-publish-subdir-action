@@ -244,7 +244,6 @@ const writeToProcess = (command: string, args: string[], opts: { env: { [id: str
 
   const name = event.pusher?.name || ENV.GITHUB_ACTOR || 'Git Publish Subdirectory';
   const email = event.pusher?.email || (ENV.GITHUB_ACTOR ? `${ENV.GITHUB_ACTOR}@users.noreply.github.com` : 'nobody@nowhere');
-  const tag = ENV.TAG
 
   // Set Git Config
   await exec(`git config --global user.name "${name}"`);
@@ -411,12 +410,13 @@ const writeToProcess = (command: string, args: string[], opts: { env: { [id: str
     message,
     author: { email, name },
   });
-  if (tag) {
-    console.log(`##[info] Tagging commit with ${tag}`)
+  console.log(`## debug ${config.tag}`);
+  if (config.tag) {
+    console.log(`##[info] Tagging commit with ${config.tag}`)
     await git.tag({
       fs,
       dir: REPO_TEMP,
-      ref: tag,
+      ref: config.tag,
     });
   }
   console.log(`##[info] Pushing`);
